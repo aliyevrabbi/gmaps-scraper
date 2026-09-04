@@ -1,0 +1,9 @@
+services:
+  - type: worker
+    name: gmaps-scraper-bot
+    env: docker
+    plan: free
+    envVars:
+      - key: BOT_TOKEN
+        sync: false
+        required: true
