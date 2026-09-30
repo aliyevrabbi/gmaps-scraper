@@ -1,9 +1,7 @@
 services:
-  - type: worker
-    name: gmaps-scraper-bot
-    env: docker
+  - type: web
+    name: leadzen-scraper
+    runtime: docker
     plan: free
-    envVars:
-      - key: BOT_TOKEN
-        sync: false
-        required: true
+    healthCheckPath: /api/health
+    autoDeploy: true

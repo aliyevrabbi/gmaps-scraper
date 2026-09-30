@@ -1,0 +1,10 @@
+node_modules
+backend/.venv
+dist
+backend/outputs
+.git
+*.zip
+__pycache__
+*.pyc
+.env
+.env.*

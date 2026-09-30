@@ -1,0 +1,6 @@
+{
+  "name": "Google Maps Instagram Lead Scraper",
+  "description": "Google Maps-dən biznes lead-lərini və Instagram profillərini toplayan zen minimalist iOS üslublu mobil responsive web dashboard.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

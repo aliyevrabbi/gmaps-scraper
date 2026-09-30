@@ -1,24 +1,17 @@
-FROM mcr.microsoft.com/playwright/python:v1.40.0-jammy
+FROM node:22-bookworm-slim AS frontend
+WORKDIR /build
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build
 
-# Set working directory
+FROM mcr.microsoft.com/playwright/python:v1.49.1-noble
 WORKDIR /app
-
-# Copy requirements file
-COPY requirements.txt .
-
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Install Playwright browsers
-RUN playwright install chromium
-RUN playwright install-deps chromium
-
-# Copy application files
-COPY scraper.py .
-COPY bot.py .
-
-# Set environment variable for unbuffered Python output
 ENV PYTHONUNBUFFERED=1
-
-# Run the bot
-CMD ["python", "bot.py"]
+COPY backend/requirements.txt ./backend/requirements.txt
+RUN pip install --no-cache-dir -r backend/requirements.txt
+COPY backend ./backend
+COPY --from=frontend /build/dist ./frontend_dist
+ENV FRONTEND_DIST=/app/frontend_dist
+EXPOSE 10000
+CMD ["sh", "-c", "uvicorn backend.main:app --host 0.0.0.0 --port ${PORT:-10000}"]
