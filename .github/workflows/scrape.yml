@@ -1,6 +1,9 @@
 name: LeadZen Scrape
 
 on:
+  push:
+    paths:
+      - "config/search.json"
   workflow_dispatch:
     inputs:
       query:
@@ -39,12 +42,41 @@ jobs:
           pip install -r backend/requirements.txt
           python -m playwright install --with-deps chromium
 
+      - name: Resolve search parameters
+        id: search
+        env:
+          QUERY_INPUT: ${{ inputs.query }}
+          LOCATION_INPUT: ${{ inputs.location }}
+          TARGET_COUNT_INPUT: ${{ inputs.target_count }}
+        run: |
+          if [ -n "$QUERY_INPUT" ]; then
+            {
+              echo "query<<EOF"
+              echo "$QUERY_INPUT"
+              echo "EOF"
+              echo "location<<EOF"
+              echo "$LOCATION_INPUT"
+              echo "EOF"
+              echo "target_count=$TARGET_COUNT_INPUT"
+            } >> "$GITHUB_OUTPUT"
+          else
+            python - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
+          with open("config/search.json", encoding="utf-8") as f:
+              config = json.load(f)
+          print(f"query={config['query']}")
+          print(f"location={config['location']}")
+          print(f"target_count={config['target_count']}")
+          PY
+          fi
+          echo "Axtarış parametrləri hazırlandı."
+
       - name: Run Google Maps scraper
         run: |
           python scripts/run_scraper.py \
-            --query "${{ inputs.query }}" \
-            --location "${{ inputs.location }}" \
-            --target-count "${{ inputs.target_count }}"
+            --query "${{ steps.search.outputs.query }}" \
+            --location "${{ steps.search.outputs.location }}" \
+            --target-count "${{ steps.search.outputs.target_count }}"
 
       - name: Upload Excel and JSON results
         if: always()

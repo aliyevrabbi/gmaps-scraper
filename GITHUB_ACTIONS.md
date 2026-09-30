@@ -1,34 +1,23 @@
-# Telefonda pulsuz scraper istifadəsi
 
-Bu versiyada hostinq və kart lazım deyil. Scraper GitHub-un pulsuz Actions serverində işləyir.
+## Run workflow düyməsi görünmürsə — ən asan üsul
 
-## Telefonda işə salmaq
+`config/search.json` faylını açın:
 
-1. [gmaps-scraper repository-sini açın](https://github.com/aliyevrabbi/gmaps-scraper).
-2. **Actions** bölməsinə keçin.
-3. Soldan **LeadZen Scrape** seçin.
-4. **Run workflow** düyməsinə basın.
-5. Aşağıdakı sahələri doldurun:
-   - **Açar söz:** məsələn `restoran`
-   - **Lokasiya:** məsələn `Bakı`
-   - **Nəticə sayı:** məsələn `20`
-6. **Run workflow** düyməsinə basın.
-7. İşin üstünə daxil olub tamamlanmasını gözləyin.
-8. Tamamlandıqdan sonra səhifənin aşağısındakı **Artifacts** hissəsində `leadzen-results-...` faylını endirin.
-9. ZIP-i açın; içində `leadzen-leads.xlsx` və `results.json` olacaq.
+1. Repository-də `config/search.json` faylına daxil olun.
+2. Sağ yuxarıdakı qələm işarəsinə (**Edit this file**) basın.
+3. Yalnız bu 3 dəyəri dəyişin:
 
-## Nəyi süzür?
+```json
+{
+  "query": "restoran",
+  "location": "Bakı",
+  "target_count": 20
+}
+```
 
-Scraper Google Maps biznes səhifəsində website yerinə Instagram linki olan biznesləri seçir və bunları Excel-ə yazır:
+4. Aşağıya keçin və **Commit changes** düyməsinə basın.
+5. GitHub həmin dəyişiklikdən sonra scraperi avtomatik başladacaq.
+6. **Actions** bölməsindən işləyən işi açın.
+7. İş tamamlananda **Artifacts** hissəsindən Excel ZIP faylını endirin.
 
-- Biznes adı
-- Reytinq
-- Rəy sayı
-- Telefon
-- Instagram linki
-- Ünvan
-- Google Maps linki
-
-## Mühüm qeyd
-
-GitHub Actions işləri pulsuz olsa da, Google Maps-in dəyişən səhifə quruluşu, internet/rate limitləri və GitHub Actions vaxt limitləri nəticəyə təsir edə bilər. Ən doğru nəticə üçün əvvəlcə 5-10 nəticə ilə test edin, sonra sayı artırın.
+Bu üsulda `scrape.yml` faylını dəyişməyin. Hər yeni axtarış üçün yalnız `config/search.json` faylını redaktə edin və **Commit changes** edin.
